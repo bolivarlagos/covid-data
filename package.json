@@ -1,0 +1,17 @@
+{
+  "name": "covid-api",
+  "version": "1.0.0",
+  "description": "Api from worldmeters.com",
+  "main": "covid-api.js",
+  "dependencies": {
+    "express": "^4.17.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "start": "node covid-api.js"
+  },
+  "keywords": [],
+  "author": "Me",
+  "license": "ISC"
+}
