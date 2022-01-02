@@ -19,8 +19,13 @@ module.exports.allContinents = async (req, res) => {
 module.exports.singleContinent = async (req, res) => {    
     try {
         const { continent } = req.params
+        const chosenContinent = continent.toUpperCase()
         const { allContinents } = await getCovidData()
-        const singleContinent = allContinents.filter(item => item["Country Other"].toUpperCase() === continent.toUpperCase() || item["Continent"].toUpperCase() === continent.toUpperCase())
+        const singleContinent = allContinents.filter(item => {
+            const continentUpperName = item["Country Other"].toUpperCase()
+            const upperName = item["Continent"].toUpperCase()
+            return  continentUpperName === chosenContinent ||  upperName === chosenContinent
+        })        
         if(singleContinent.length === 0){
             throw new Error()
         }
@@ -41,8 +46,12 @@ module.exports.allCountries = async (req, res) => {
 module.exports.singleCountry = async (req, res) => {    
     try {
         const { country } = req.params
+        const chosenCountry = country.toUpperCase()
         const { allCountries } = await getCovidData()
-        const singleCountry = allCountries.filter(item => item["Country Other"].toUpperCase() === country.toUpperCase())
+        const singleCountry = allCountries.filter(item => {
+            const upperCaseCountry = item["Country Other"].toUpperCase()
+            return upperCaseCountry === chosenCountry
+        })
         if(singleCountry.length === 0){
             throw new Error()
         }
@@ -69,23 +78,28 @@ module.exports.countryPosition = async (req, res) => {
 module.exports.countriesFromContinent = async (req, res) => {        
     try {
         let { continent } = req.params
-        if(continent.toUpperCase() === "NORTH-AMERICA" || continent.toUpperCase() === "SOUTH-AMERICA"){
-            continent = continent.replace("-", " ")
+        let chosenContinent = continent.toUpperCase()
+
+        if(chosenContinent === "NORTH-AMERICA" || chosenContinent === "SOUTH-AMERICA"){
+            chosenContinent = chosenContinent.replace("-", " ")
         }
+
         const { allCountries } = await getCovidData()  
         const countriesFromContinent = allCountries.filter(country => {
-            if(continent.toUpperCase() === "AMERICA"){
-                return country["Continent"].toUpperCase() === "NORTH AMERICA"|| country["Continent"].toUpperCase() === "SOUTH AMERICA"
+
+            const upperCaseContinent = country["Continent"].toUpperCase()
+
+            if(chosenContinent === "AMERICA"){                
+                return upperCaseContinent === "NORTH AMERICA" || upperCaseContinent === "SOUTH AMERICA"
             }
-            if(continent.toUpperCase() === "OCEANIA"){                
-                return country["Continent"].toUpperCase() === "Australia/Oceania".toUpperCase()
+            if(chosenContinent === "OCEANIA"){                
+                return upperCaseContinent === "Australia/Oceania".toUpperCase()
             }
-            return country["Continent"].toUpperCase() === continent.toUpperCase()
+            return upperCaseContinent === chosenContinent
         })    
         if(countriesFromContinent.length === 0){
             throw new Error()
         }        
-        console.log(countriesFromContinent)
         res.status(200).json(countriesFromContinent)
     } catch (error) {
         res.status(500).json({ message: "No continent with that name" })        
