@@ -3,4 +3,4 @@ const routes = require("./routings/routings")
 const { PORT } = require("./utils")
 
 app.listen(PORT || 3000)
-app.use("*", routes)
+app.use("/api", routes)

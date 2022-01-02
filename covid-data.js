@@ -21,6 +21,7 @@ const getCovidData = async () => {
     }
 
     const $ = cheerio.load(html)
+
     $("#main_table_countries_today > thead > tr").each((_, el) => {
         const theadItems = $(el).text().trim().split(/\n+/)
         for(let item of theadItems){
@@ -68,6 +69,7 @@ const getCovidData = async () => {
             allCountries.push(countryInformation)       
         }
     })
+    return { world, allContinents, allCountries }
 }
 
-getCovidData()
+module.exports = getCovidData

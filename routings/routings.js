@@ -1,11 +1,10 @@
 const controllers = require("../controllers/controllers")
 const routes = require("express").Router()
 
-routes.get("*", controllers.wrongRoute)
-routes.get("/api/world", controllers.allWorld)
-routes.get("/api/continents", controllers.allContinents)
-routes.get("/api/continents/:single", controllers.singleContinent)
-routes.get("/api/countries", controllers.allCountries)
-routes.get("/api/countries/:single", controllers.singleCountry)
+routes.get("/world", controllers.allWorld)
+routes.get("/continents", controllers.allContinents)
+routes.get("/continents/:single", controllers.singleContinent)
+routes.get("/countries", controllers.allCountries)
+routes.get("/countries/:single", controllers.singleCountry)
 
 module.exports = routes
