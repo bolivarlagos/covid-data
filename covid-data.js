@@ -6,13 +6,22 @@ const getCovidData = async () => {
     const response = await get(URL)
     const html = await response.data 
 
+    const regexContinent = /^South America|North America|Asia|Europe|Africa|Oceania$/
     const thead = []
     const allContinents = []
     const allCountries = []
     const world = []
 
+    const objectCreator = (items) => {
+        let obj = {}
+        for(let i = 0; i < thead.length; i++){
+            obj[thead[i]] = items[i] || "No Information"
+        }
+        return obj  
+    }
+
     const $ = cheerio.load(html)
-    $("#main_table_countries_today > thead > tr").each((i, el) => {
+    $("#main_table_countries_today > thead > tr").each((_, el) => {
         const theadItems = $(el).text().trim().split(/\n+/)
         for(let item of theadItems){
             if(item === "#"){
@@ -36,5 +45,29 @@ const getCovidData = async () => {
             }            
         }
     })
-    console.log(thead)
+
+    $("#main_table_countries_today > tbody > tr").each((_, el) => {
+        let items = $(el).text().split(/\n/)
+        if(items[3].match(regexContinent) || items[2] === "World"){
+            if(items[2] === "World"){
+                let modifiedItem = [...items]
+                modifiedItem.shift()
+                const worldInformation = objectCreator(modifiedItem)
+                world.push(worldInformation)
+            } else {
+                let sliced = items.slice(5)
+                let modifiedItem = ["", items[3]].concat(sliced)
+                const continentInformation = objectCreator(modifiedItem)
+                allContinents.push(continentInformation)
+            }
+        }
+        if(items[1] !== "" && items[1] !== "World" && !items[1].match(regexContinent)){
+            let modifiedItem = [...items]
+            modifiedItem.shift()
+            const countryInformation = objectCreator(modifiedItem)
+            allCountries.push(countryInformation)       
+        }
+    })
 }
+
+getCovidData()
