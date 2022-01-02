@@ -77,11 +77,15 @@ module.exports.countriesFromContinent = async (req, res) => {
             if(continent.toUpperCase() === "AMERICA"){
                 return country["Continent"].toUpperCase() === "NORTH AMERICA"|| country["Continent"].toUpperCase() === "SOUTH AMERICA"
             }
+            if(continent.toUpperCase() === "OCEANIA"){                
+                return country["Continent"].toUpperCase() === "Australia/Oceania".toUpperCase()
+            }
             return country["Continent"].toUpperCase() === continent.toUpperCase()
         })    
         if(countriesFromContinent.length === 0){
             throw new Error()
         }        
+        console.log(countriesFromContinent)
         res.status(200).json(countriesFromContinent)
     } catch (error) {
         res.status(500).json({ message: "No continent with that name" })        
