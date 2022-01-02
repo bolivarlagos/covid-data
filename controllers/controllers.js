@@ -19,13 +19,23 @@ module.exports.allContinents = async (req, res) => {
 module.exports.singleContinent = async (req, res) => {    
     try {
         const { continent } = req.params
-        const chosenContinent = continent.toUpperCase()
+        let chosenContinent = continent.toUpperCase()
         const { allContinents } = await getCovidData()
+
+        if(chosenContinent === "NORTH-AMERICA" || chosenContinent === "SOUTH-AMERICA"){
+            chosenContinent = chosenContinent.replace("-", " ")
+        }
+
         const singleContinent = allContinents.filter(item => {
+
             const continentUpperName = item["Country Other"].toUpperCase()
             const upperName = item["Continent"].toUpperCase()
+            if(chosenContinent === "AMERICA"){                
+                return upperName === "NORTH AMERICA" || upperName === "SOUTH AMERICA"
+            }
             return  continentUpperName === chosenContinent ||  upperName === chosenContinent
         })        
+
         if(singleContinent.length === 0){
             throw new Error()
         }
