@@ -15,7 +15,7 @@ const getCovidData = async () => {
     const objectCreator = (items) => {
         let obj = {}
         for(let i = 0; i < thead.length; i++){
-            obj[thead[i]] = items[i] || "No Information"
+            obj[thead[i]] = items[i] || "No Data"
         }
         return obj  
     }
@@ -30,6 +30,7 @@ const getCovidData = async () => {
             } else {
                 let modifiedItem = item.replace(",", "").trim()
                 modifiedItem = modifiedItem.replace(/([A-Z])/g, " $1").trim()
+                modifiedItem = modifiedItem.replace(/(?:^|\W)Tot(?:$|\W)/, "Total")
 
                 if(modifiedItem === "Tests/"){
                     thead.push(modifiedItem + "1 M pop")
